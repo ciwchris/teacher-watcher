@@ -6,6 +6,9 @@ no server, no hosting cost, nothing to run locally.
 
 - Filtered listings it watches:
   <https://www.schooljobs.com/careers/spokaneschools?department[0]=Certificated&category[0]=Teacher&sort=PostingDate%7CDescending>
+- Title filter: only postings whose title contains **`TEACHER - GRADE`** (case-insensitive)
+  are tracked — so it catches grade-level teaching roles and ignores the rest. Change or
+  clear this via `TITLE_FILTER` in `scrape.mjs`.
 - Schedule: **2:00 PM Pacific daily** (`21:00 UTC`; it becomes 1:00 PM during winter
   because GitHub cron doesn't follow daylight saving). GitHub may delay a run by 10–60+ min.
 
@@ -67,5 +70,7 @@ In the repo: **Settings → Secrets and variables → Actions → New repository
 - **What it watches:** change `LISTINGS_URL` in `scrape.mjs` to a different filtered URL
   (e.g. a different department/category) — copy the URL from the site after applying
   filters in your browser.
+- **Title filter:** edit `TITLE_FILTER` in `scrape.mjs` (e.g. `"TEACHER - GRADE"`,
+  `"MUSIC"`, or `""` to keep every teacher posting). It's a case-insensitive substring match.
 - **Test locally:** `npm install && npx playwright install chromium && node check.mjs`
   (delete `seen.json` first to simulate a first run).

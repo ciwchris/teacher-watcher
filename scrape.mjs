@@ -13,6 +13,16 @@ export const LISTINGS_URL =
   "https://www.schooljobs.com/careers/spokaneschools" +
   "?department[0]=Certificated&category[0]=Teacher&sort=PostingDate%7CDescending";
 
+// Only keep postings whose title contains this text (case-insensitive). The site's
+// own filters can't narrow to grade-level teaching roles, so we filter by title here.
+// Set to "" to keep every teacher posting.
+export const TITLE_FILTER = "TEACHER - GRADE";
+
+function matchesTitleFilter(title) {
+  if (!TITLE_FILTER) return true;
+  return title.toUpperCase().includes(TITLE_FILTER.toUpperCase());
+}
+
 // Matches the numeric id in a job-detail href, e.g. /jobs/4812345/teacher-grade-3
 const JOB_HREF_RE = /\/jobs\/(\d+)\b/;
 
@@ -88,7 +98,7 @@ export async function scrapeJobs({ headless = true } = {}) {
       if (fresh.length === 0) break;
       for (const j of fresh) {
         seen.add(j.id);
-        all.push(j);
+        if (matchesTitleFilter(j.title)) all.push(j);
       }
       // A short page means there is no next page.
       if (jobs.length < 10) break;
